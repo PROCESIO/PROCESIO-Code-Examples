@@ -1,0 +1,108 @@
+<script>
+const btn = document.getElementById("formSubmit");
+
+function submitHandler(e) {
+  const processId = "procesID that you will use";
+
+  const name = document.getElementById("Name").value;
+  const phone = document.getElementById("PhoneNumber").value;
+  const email = document.getElementById("Email").value;
+  const notes = document.getElementById("Notes").value;
+
+  const data = {
+    Name: name,
+    Email: email,
+    Phone: phone,
+    Notes: notes,
+  };
+
+  console.log("before");
+
+  callProcesio({ body: data, processId: processId });
+
+  console.log("after");
+}
+
+btn.onclick = submitHandler;
+
+function login() {
+  const credentials = {
+    username: "sorin.pavel@procesio.com",
+    password: "SecurePassword75!",
+    realm: "procesio01",
+    client_id: "procesio-ui",
+  };
+
+  const form = [];
+
+  for (const property in credentials) {
+    const encodedKey = encodeURIComponent(property);
+    const encodedValue = encodeURIComponent(credentials[property]);
+    form.push(encodedKey + "=" + encodedValue);
+  }
+
+  const formJoin = form.join("&");
+
+  const headers = new Headers();
+
+  headers.set("Content-type", "application/x-www-form-urlencoded");
+
+  return fetch("https://api.procesio.app:4532/api/authentication", {
+    method: "POST",
+    body: formJoin,
+    headers,
+  }).then((resp) => resp.json());
+}
+
+function callProcess({ bearToken, flowId, body }) {
+  const headers = new Headers();
+
+  headers.set("Authorization", `Bearer ${bearToken}`);
+
+  headers.set("Content-type", "application/json");
+
+  return fetch(
+    `https://api.procesio.app:4321/api/Projects/${flowId}/instances/publish`,
+    {
+      method: "POST",
+      headers,
+      body: JSON.stringify(body),
+    }
+  )
+    .then((resp) => resp.json())
+    .then((resp) => {
+      launchProcess({ bearToken: bearToken, instanceId: resp.flows.id });
+    });
+}
+
+function launchProcess({ bearToken, instanceId }) {
+  const headers = new Headers();
+
+  headers.set("Authorization", `Bearer ${bearToken}`);
+
+  headers.set("Content-type", "application/json");
+
+  return fetch(
+    `https://api.procesio.app:4321/api/Projects/instances/${instanceId}/launch`,
+    {
+      method: "POST",
+      headers,
+      body: JSON.stringify({ connectionId: "" }),
+    }
+  ).then((resp) => resp.json());
+}
+
+function callProcesio({ processId, body }) {
+  console.log(processId, body);
+
+  login().then((resp) => {
+    console.log(resp);
+
+    callProcess({
+      bearToken: resp.access_token,
+      flowId: processId,
+      body,
+    }).then((resp) => console.log("instanceId", resp.instanceId));
+  });
+}
+</script>
