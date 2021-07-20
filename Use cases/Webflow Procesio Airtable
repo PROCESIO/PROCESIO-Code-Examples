@@ -2,7 +2,7 @@
 const btn = document.getElementById("formSubmit");
 
 function submitHandler(e) {
-  const processId = "procesID that you will use";
+  const processId = "b3c7e427-bd89-472b-9fb0-76e3059e7817";
 
   const name = document.getElementById("Name").value;
   const phone = document.getElementById("PhoneNumber").value;
@@ -27,8 +27,8 @@ btn.onclick = submitHandler;
 
 function login() {
   const credentials = {
-    username: "sorin.pavel@procesio.com",
-    password: "SecurePassword75!",
+    username: "cuore.nica@procesio.com",
+    password: "C#ut1creier",
     realm: "procesio01",
     client_id: "procesio-ui",
   };
@@ -102,7 +102,7 @@ function callProcesio({ processId, body }) {
       bearToken: resp.access_token,
       flowId: processId,
       body,
-    }).then((resp) => console.log("instanceId", resp.instanceId));
+    });
   });
 }
 </script>
