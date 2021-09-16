@@ -1,0 +1,68 @@
+using System;
+using System.Threading.Tasks;
+using Ringhel.Procesio.Action.Core.Models;
+using Ringhel.Procesio.Action.Core;
+using Ringhel.Procesio.Action.Core.ActionDecorators;
+using Ringhel.Procesio.Action.Core.Utils;
+using System.Collections.Generic;
+
+namespace SelectExample
+{
+    [ClassDecorator(Name = "Name of Action", Shape = ActionShape.Square, Description = "Description of the custom action", Classification = Classification.cat1,
+        Tooltip = "Tooltip of the action", IsTestable = false)]
+    [FEDecorator(Label = "Configure formatting", Type = FeComponentType.Side_pannel, Tab = "Presentation",
+Parent = "Side_Panel", RowId = 1)]
+    [Permissions(CanDelete = true, CanDuplicate = true, CanAddFromToolbar = true)]
+    public class Class1 : IAction
+    {
+        [FEDecorator(Label = "First number", Type = FeComponentType.Select, Tab = "Input Tab", Options = "ConfigP1OptionsList", Tooltip = "Tooltip input1", RowId = 1)]
+        [BEDecorator(IOProperty = Direction.Input)]
+        [Validator(IsRequired = false)]
+        public int Input1 { get; set; }
+
+        [FEDecorator(Label = "Second number", Type = FeComponentType.Select, Tab = "Input Tab", Options = "ConfigP1OptionsList", Tooltip = "Tooltip input2", RowId = 2)]
+        [BEDecorator(IOProperty = Direction.Input)]
+        [Validator(IsRequired = false)]
+        public int Input2 { get; set; }
+
+        [FEDecorator(Label = "Third number", Type = FeComponentType.Number, Tab = "Input Tab", RowId = 3)]
+        [BEDecorator(IOProperty = Direction.Output)]
+        [Validator(IsRequired = true)]
+        public int Input3 { get; set; }
+
+        [FEDecorator(Label = "Result", Type = FeComponentType.Number, Tab = "Input Tab", RowId = 4)]
+        [BEDecorator(IOProperty = Direction.Output)]
+        [Validator(IsRequired = true)]
+        public int Result { get; set; }
+
+
+        private IEnumerable<OptionModel> ConfigP1OptionsList { get; } = new List<OptionModel>()
+        {
+            new OptionModel()
+            {
+                name = "Value 1",
+                value = 1
+            },
+            new OptionModel(){
+                name = "Value 2",
+                value = 2
+            },
+            new OptionModel(){
+                name = "Value 3",
+                value = 3
+            },
+            new OptionModel(){
+                name = "Value 4",
+                value = 4
+            },
+            new OptionModel(){
+                name = "Value 5",
+                value = 5
+            }
+        };
+        public async Task Execute()
+        {
+            Result = Input1 + Input2 + Input3;
+        }
+    }
+}
