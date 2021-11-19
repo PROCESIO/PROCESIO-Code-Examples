@@ -27,8 +27,8 @@ btn.onclick = submitHandler;
 
 function login() {
   const credentials = {
-    username: "cuore.nica@procesio.com",
-    password: "C#ut1creier",
+    username: "support@procesio.com",
+    password: "strongPassword",
     realm: "procesio01",
     client_id: "procesio-ui",
   };
